@@ -1,28 +1,3 @@
-## Installation Arduino CLI
-
-https://docs.arduino.cc/arduino-cli/installation/#download
-
-```shell
-arduino-cli version
-arduino-cli config init
-arduino-cli config add board_manager.additional_urls https://github.com/ambiot/ambd_arduino/raw/master/Arduino_package/package_realtek.com_amebad_index.json
-arduino-cli config dump
-arduino-cli core update-index
-arduino-cli core search  # look for ID `realtek:AmebaD`
-arduino-cli core install realtek:AmebaD
-arduino-cli core list
-```
-
-## Code d'exemple
-
-Un fichier `<project>.ino` dans le répertoire du projet `<project>` est
-nécessaire pour le système de build de `arduino-cli`. Le système de build
-compile tous les fichiers `.cpp` trouvés dans le répertoire pour les inclure
-dans l'executable final.
-
-Exemple de code :
-
-```c
 #include <Arduino.h>
 
 // the setup function runs once when you press reset or power the board
@@ -90,27 +65,3 @@ void loop() {
   fade();       // fade RED, BLUE
   delay(1000);  // wait for a second
 }
-```
-
-```shell
-arduino-cli compile \
-  --verbose \
-  --fqbn realtek:AmebaD:Ai-Thinker_BW16 \
-  --build-path build
-```
-
-Fichier binaire généré : `build/km0_km4_image2.bin`
-
-Application au format ELF : `build/application.axf`
-
-## VSCodium extensions
-
-- `clangd` (llvm-vs-code-extensions)
-- `Cortex-Debug` (marus25)
-
-## Liens
-
-- https://www.amebaiot.com/en/amebad-bw16-arduino-getting-started/
-- https://ameba-doc-arduino-sdk.readthedocs-hosted.com/en/latest/ameba_d/bw16-typeb/Getting_Started/Getting%20Started%20with%20BW16.html
-- https://docs.arduino.cc/arduino-cli/getting-started/
-- https://elm-chan.org/fsw/ff/
