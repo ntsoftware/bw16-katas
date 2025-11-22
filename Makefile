@@ -1,21 +1,15 @@
-FQBN = realtek:AmebaD:Ai-Thinker_BW16
-PORT = /dev/ttyUSB0
-BAUDRATE = 9600
+include .env
 
-SAMPLE_EXE = build/sample/application.axf
-SAMPLE_SOURCES = \
-	sample/sample.ino \
-	sample/main.cpp
+PROJECTS = sample wifi
 
-all: sample
+all: $(PROJECTS)
+	scripts/join.py $(PROJECTS) > compile_commands.json
 
-sample: $(SAMPLE_EXE)
+sample:
+	$(MAKE) -C $@
 
-$(SAMPLE_EXE): $(SAMPLE_SOURCES)
-	cd sample && arduino-cli compile \
-		--fqbn $(FQBN) \
-		--optimize-for-debug \
-		--build-path $(abspath $(dir $@))
+wifi:
+	$(MAKE) -C $@
 
 monitor:
 	arduino-cli monitor \
@@ -27,4 +21,4 @@ monitor:
 clean:
 	rm -rf build
 
-.PHONY: clean monitor sample
+.PHONY: clean monitor $(PROJECTS)
