@@ -2,17 +2,24 @@
 #include <WiFi.h>
 #include <WiFiUdp.h>
 
-char ssid[] = "TDS-Team";
-char pass[] = "password";
+#define BLINK_STACK_SIZE 256 // words
 
-IPAddress local_ip;
-uint16_t local_port = 5000;
+static void task_blink(void *);
 
 WiFiUDP udp;
 
-void setup() {
+IPAddress local_ip;
+uint16_t local_port;
+
+void setup()
+{
     Serial.begin(115200);
     while (!Serial) {}
+
+    xTaskCreate(task_blink, "blink", BLINK_STACK_SIZE, NULL, tskIDLE_PRIORITY, NULL);
+
+    char ssid[] = "TDS-Team";
+    char pass[] = "password";
 
     while (1) {
         Serial.print("connecting to SSID ");
@@ -20,26 +27,29 @@ void setup() {
         int status = WiFi.begin(ssid, pass);
         delay(10000);
         if (status == WL_CONNECTED) {
+            Serial.println();
             Serial.println("connected");
             break;
         }
     }
 
+    local_ip = WiFi.localIP();
+    local_port = 5000;
+
     Serial.print("ssid: ");
     Serial.println(WiFi.SSID());
     Serial.print("ip: ");
-    Serial.println(WiFi.localIP());
+    Serial.println(local_ip);
+    Serial.print("port: ");
+    Serial.println(local_port);
     Serial.print("rssi: ");
     Serial.print(WiFi.RSSI());
     Serial.println(" dBm");
 
-    local_ip = WiFi.localIP();
-
     udp.begin(local_port);
 }
 
-void loop()
-{
+void loop() {
     int packet_size = udp.parsePacket();
     if (packet_size) {
         char request[256];
@@ -77,5 +87,23 @@ void loop()
         Serial.print(remote_port);
         Serial.print("] ");
         Serial.println(response);
+    }
+}
+
+static void task_blink(void *)
+{
+    pinMode(LED_R, OUTPUT);
+    pinMode(LED_G, OUTPUT);
+    pinMode(LED_B, OUTPUT);
+
+    digitalWrite(LED_R, LOW);
+    digitalWrite(LED_G, LOW);
+    digitalWrite(LED_B, LOW);
+
+    while (1) {
+        digitalWrite(LED_G, HIGH);
+        delay(1000);
+        digitalWrite(LED_G, LOW);
+        delay(1000);
     }
 }

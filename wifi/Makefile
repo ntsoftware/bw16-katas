@@ -16,6 +16,7 @@ upload: $(BUILD_DIR)/km0_km4_image2.bin
 	arduino-cli upload \
 		--fqbn $(FQBN) \
 		--port $(PORT) \
+		--upload-property upload.auto_mode=Enable \
 		--input-file $<
 
 .PHONY: upload
