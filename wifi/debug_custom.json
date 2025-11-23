@@ -1,0 +1,21 @@
+[
+  {
+    "name": "JLink Attach",
+    "request": "attach",
+    "configId": "realtek:AmebaD:Ai-Thinker_BW16",
+    "servertype": "jlink",
+    "interface": "swd",
+    "device": "Cortex-M33",
+    "gdbPath": "arm-none-eabi-gdb",
+    "serverPath": "JLinkGDBServerCLExe",
+    "serverArgs": [
+      "-scriptfile",
+      "${workspaceRoot}/RTL872x_Arduino_debug.JLinkScript"
+    ],
+    "postAttachCommands": [
+      "monitor clrbp",
+      "monitor reset",
+      "continue"
+    ]
+  }
+]

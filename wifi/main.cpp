@@ -4,6 +4,8 @@
 
 char ssid[] = "TDS-Team";
 char pass[] = "password";
+
+IPAddress local_ip;
 uint16_t local_port = 5000;
 
 WiFiUDP udp;
@@ -31,6 +33,8 @@ void setup() {
     Serial.print(WiFi.RSSI());
     Serial.println(" dBm");
 
+    local_ip = WiFi.localIP();
+
     udp.begin(local_port);
 }
 
@@ -38,13 +42,13 @@ void loop()
 {
     int packet_size = udp.parsePacket();
     if (packet_size) {
-        IPAddress local_ip = WiFi.localIP();
-        IPAddress remote_ip = udp.remoteIP();
-        uint16_t remote_port = udp.remotePort();
-
         char request[256];
         int request_size = udp.read(request, sizeof(request) - 1);
         request[request_size] = 0;
+
+        // Note: make sure to read packet data before getting remote address otherwise it will be corrupt
+        IPAddress remote_ip = udp.remoteIP();
+        uint16_t remote_port = udp.remotePort();
 
         Serial.print("[");
         Serial.print(remote_ip);
