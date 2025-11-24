@@ -1,10 +1,10 @@
 include ../.env
 
-PROJECT = wifi
+PROJECT := wifi
 
-BUILD_DIR = ../build/$(PROJECT)
+BUILD_DIR := ../build/$(PROJECT)
 
-SOURCES = main.cpp
+SOURCES := main.cpp
 
 $(BUILD_DIR)/km0_km4_image2.bin: $(PROJECT).ino $(SOURCES)
 	arduino-cli compile \

@@ -1,9 +1,17 @@
 include .env
 
-PROJECTS = sample wifi
+ifeq ($(OS),Windows_NT)
+	PYTHON := python
+	RM := del /s/q
+else
+	PYTHON := python3
+	RM := rm -rf
+endif
+
+PROJECTS := sample wifi
 
 all: $(PROJECTS)
-	scripts/join.py $(PROJECTS) > compile_commands.json
+	$(PYTHON) scripts/join.py $(PROJECTS) > compile_commands.json
 
 sample:
 	$(MAKE) -C $@
@@ -19,6 +27,6 @@ monitor:
 		--quiet
 
 clean:
-	rm -rf build
+	$(RM) build
 
 .PHONY: clean monitor $(PROJECTS)
