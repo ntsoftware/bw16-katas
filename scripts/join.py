@@ -13,4 +13,9 @@ for project in sys.argv[1:]:
     with open(build_dir.joinpath(project, "compile_commands.json"), encoding="utf-8") as f:
         commands.extend(json.load(f))
 
+for cmd in commands:
+    cmd["file"] = cmd["file"].replace("/build", "")
+    cmd["file"] = cmd["file"].replace("/sketch", "")
+    cmd["file"] = cmd["file"].replace(".ino.cpp", ".ino")
+
 print(json.dumps(commands, indent=2))
